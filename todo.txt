@@ -1,0 +1,7 @@
+notes       done
+tables      done
+mileage     done
+calculator  do
+timesheet   do
+contacts    do
+calendar    do
