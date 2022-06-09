@@ -63,11 +63,16 @@ textarea */
         .flex-column input:not(input[type='radio'], input[type='checkbox']) {
             padding: 2px;
             margin: 2px;
+
             border-radius: 5px;
             border: 1px solid grey;
             height: 30px;
             width: 80%;
             text-align: center;
+	    padding: 0;
+	    margin:0;
+	    border-radius:0px;
+
         }
         
         button {
@@ -102,16 +107,25 @@ textarea */
             font-family: 'Times New Roman', Times, serif;
             font-size: 16px;
         }
-        
-        th {
-	        min-width:40px;
-	    }
-        
+
+        th:not(#add-column, #add-row, #blank-th) {
+	    min-width:40px;
+
+	}
+
+
+
         td {
             max-width: 50px;
+	margin:0;
+padding:0;
             overflow-wrap: break-word;
             text-align: center;
         }
+
+	
+
+
         
         td:hover,
         th:hover {
@@ -139,6 +153,7 @@ textarea */
             border-radius: 0px;
             margin: 5px;
         }
+
     </style>
 </head>
 
@@ -201,7 +216,7 @@ textarea */
             //fill in header from object
             str = "";
             let headerFields = myTable.headerNames; //an array of strings
-            str += "<tr><th></th>";
+            str += "<tr><th id='blank-th'></th>";
             for (let i = 0; i < headerFields.length; i++) {
                 str += "<th id='header-" + (i + 1).toString() + "'>" + headerFields[i].toString() + "</th>";
             }
