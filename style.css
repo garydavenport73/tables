@@ -17,17 +17,15 @@
         
         h1,
         nav {
-            background-color: lightskyblue;
-            width: 80%;
-            text-align: center;
-            border-radius: 5px;
+			background-color: lightskyblue; 
+			width: 80%; text-align: 
+			center; border-radius: 5px;
         }
         /* 'FORM' ELEMENTS */
         
         button,
         select
-        /* input,
-textarea */
+        /* input textarea */
         
         {
             padding: 2px;
@@ -103,20 +101,14 @@ textarea */
 
 	}
 
-
-
         td {
             max-width: 50px;
-	margin:0;
-padding:0;
+			margin:0;
+			padding:0;
             overflow-wrap: break-word;
             text-align: center;
         }
 
-	
-
-
-        
         td:hover,
         th:hover {
             background-color: lightskyblue;
