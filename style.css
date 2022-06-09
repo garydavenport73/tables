@@ -1,0 +1,159 @@
+        * {
+            box-sizing: border-box;
+        }
+        
+        html {
+            background-color: lightskyblue;
+        }
+        
+        main {
+            width: 320px;
+            margin: auto;
+            background-color: lightblue;
+            border-radius: 5px;
+            padding-bottom: 20px;
+        }
+        /* TOP OF MAIN/NAV */
+        
+        h1,
+        nav {
+            background-color: lightskyblue;
+            width: 80%;
+            text-align: center;
+            border-radius: 5px;
+        }
+        /* 'FORM' ELEMENTS */
+        
+        button,
+        select
+        /* input,
+textarea */
+        
+        {
+            padding: 2px;
+            margin: 2px;
+            border-radius: 5px;
+            border: 1px solid grey;
+            height: 30px;
+        }
+        
+        button:hover {
+            background-color: lightblue;
+        }
+        
+        #main-table input:not(input[type='radio'], input[type='checkbox']) {
+            width: 100%;
+            /* background-color: yellow; */
+        }
+        
+        #main-header-form input:not(input[type='radio'], input[type='checkbox']) {
+            max-width: 50%;
+        }
+        
+        .flex-column input:not(input[type='radio'], input[type='checkbox']) {
+            padding: 2px;
+            margin: 2px;
+
+            border-radius: 5px;
+            border: 1px solid grey;
+            height: 30px;
+            width: 80%;
+            text-align: center;
+	    padding: 0;
+	    margin:0;
+	    border-radius:0px;
+
+        }
+        
+        button {
+            min-width: 40px;
+        }
+        
+        #note {
+            width: 80%;
+            height: 320px;
+            max-width: 320px;
+            margin-bottom: 20px;
+        }
+        /* TABLLE STYLES */
+        
+        table {
+            background-color: lightskyblue;
+            border-radius: 5px;
+            border: 2px solid whitesmoke;
+            width: 80%;
+            display:block;
+            overflow-x: auto;
+        }
+        
+        tr {
+            background-color: lightblue;
+        }
+        
+        th,
+        th input {
+            background-color: lightskyblue;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 16px;
+        }
+
+        th:not(#add-column, #add-row, #blank-th) {
+	    min-width:40px;
+
+	}
+
+
+
+        td {
+            max-width: 50px;
+	margin:0;
+padding:0;
+            overflow-wrap: break-word;
+            text-align: center;
+        }
+
+	
+
+
+        
+        td:hover,
+        th:hover {
+            background-color: lightskyblue;
+            background-color: white;
+            border-radius: 5px;
+        }
+        /* DEFAULT FLOW */
+        
+        .flex-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .flex-row {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        
+        .wide-square-button {
+            width: 100%;
+            border-radius: 0px;
+            margin: 5px;
+        }
+        
+        /* ALREADY SET FOR PHONE*/
+        /* TABLET*/
+        @media only screen and (min-width : 600px) {
+			#main-table{
+				width:600px;
+			}
+        }
+        /*DESKTOP*/
+        @media only screen and (min-width: 900px){
+			#main-table{
+				width:900px;
+			}
+		}
