@@ -355,6 +355,7 @@
         }
         //Header functions
         function updateHeaderName() {
+            updateDataFromCurrentInputs();
             let input = document.getElementById("edit-field-name-input");
             myTable.headerNames[usefulInteger - 1] = input.value;
             usefulInteger = -1;
@@ -507,9 +508,7 @@
         }
 
         function load() {
-
             console.log("load() called");
-
             let fileContents = "";
             let inputTypeIsFile = document.createElement('input');
             inputTypeIsFile.type = "file";
