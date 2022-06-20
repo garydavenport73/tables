@@ -113,8 +113,8 @@
                 console.log("need to process header number" + columnNumber);
                 usefulInteger = parseInt(columnNumber);
                 document.getElementById('column-display-heading').innerHTML = "Column " + columnNumber + ": \"" + myTable.headerNames[usefulInteger - 1] + "\"";
-                document.getElementById('edit-field-name-input').value=myTable.headerNames[usefulInteger - 1];
-                
+                document.getElementById('edit-field-name-input').value = myTable.headerNames[usefulInteger - 1];
+
                 showMain("main-header-form")
             } else if (ids[0] === "row") { //process row clicked
                 //get row number
@@ -154,6 +154,7 @@
         }
         //Header functions
         function updateHeaderName() {
+            updateDataFromCurrentInputs();
             let input = document.getElementById("edit-field-name-input");
             myTable.headerNames[usefulInteger - 1] = input.value;
             usefulInteger = -1;
@@ -306,9 +307,7 @@
         }
 
         function load() {
-
             console.log("load() called");
-
             let fileContents = "";
             let inputTypeIsFile = document.createElement('input');
             inputTypeIsFile.type = "file";

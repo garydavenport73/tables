@@ -17,9 +17,10 @@
         
         h1,
         nav {
-			background-color: lightskyblue; 
-			width: 80%; text-align: 
-			center; border-radius: 5px;
+            background-color: lightskyblue;
+            width: 80%;
+            text-align: center;
+            border-radius: 5px;
         }
         /* 'FORM' ELEMENTS */
         
@@ -51,16 +52,14 @@
         .flex-column input:not(input[type='radio'], input[type='checkbox']) {
             padding: 2px;
             margin: 2px;
-
             border-radius: 5px;
             border: 1px solid grey;
             height: 30px;
             width: 80%;
             text-align: center;
-	    padding: 0;
-	    margin:0;
-	    border-radius:0px;
-
+            padding: 0;
+            margin: 0;
+            border-radius: 0px;
         }
         
         button {
@@ -80,7 +79,7 @@
             border-radius: 5px;
             border: 2px solid whitesmoke;
             width: 80%;
-            display:block;
+            display: block;
             overflow-x: auto;
         }
         
@@ -95,20 +94,19 @@
             font-family: 'Times New Roman', Times, serif;
             font-size: 16px;
         }
-
+        
         th:not(#add-column, #add-row, #blank-th) {
-	    min-width:40px;
-
-	}
-
+            min-width: 40px;
+        }
+        
         td {
             max-width: 50px;
-			margin:0;
-			padding:0;
+            margin: 0;
+            padding: 0;
             overflow-wrap: break-word;
             text-align: center;
         }
-
+        
         td:hover,
         th:hover {
             background-color: lightskyblue;
@@ -135,17 +133,18 @@
             border-radius: 0px;
             margin: 5px;
         }
-        
         /* ALREADY SET FOR PHONE*/
         /* TABLET*/
-        @media only screen and (min-width : 600px) {
-			#main-table{
-				width:600px;
-			}
+        
+        @media only screen and (min-width: 600px) {
+            #main-table {
+                width: 600px;
+            }
         }
         /*DESKTOP*/
-        @media only screen and (min-width: 900px){
-			#main-table{
-				width:900px;
-			}
-		}
+        
+        @media only screen and (min-width: 900px) {
+            #main-table {
+                width: 900px;
+            }
+        }
