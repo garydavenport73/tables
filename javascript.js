@@ -1,153 +1,109 @@
         let initialTable = {
-            headerNames: ["Column 1", "Column 2", "Column 3"],
+            headers: ["Column 1", "Column 2", "Column 3"],
             data: [
-                ["", "", ""],
-                ["", "", ""],
-                ["", "", ""]
+                {"Column 1":"", "Column 2":"","Column 3":""},
+                {"Column 1":"", "Column 2":"","Column 3":""},
+                {"Column 1":"", "Column 2":"","Column 3":""}
             ]
         }
 
-        let myTable = JSON.parse(JSON.stringify(initialTable));
-        let usefulInteger = -1;
+        let table = JSON.parse(JSON.stringify(initialTable));
 
-        function makeTable() {
-            let tableHeader = document.getElementById('tables-header');
-            let tableBody = document.getElementById('tables-body');
-            let tableFooter = document.getElementById('tables-footer');
+		function processColumnClick(header){
+			alert("need to process header "+header);
+			}
+		function processRowClick(row){
+			alert("need to process row "+row.toString());
+			}
+
+        function makeTable(table) {
+			let tableElement= document.getElementById('tables-table');
             let str = "";
 
             //fill in header from object
             str = "";
-            let headerFields = myTable.headerNames; //an array of strings
-            str += "<tr><th id='blank-th'></th>";
-            for (let i = 0; i < headerFields.length; i++) {
-                str += "<th id='header-" + (i + 1).toString() + "'>" + headerFields[i].toString() + "</th>";
+            let headers = table.headers; //an array of strings
+            str += "<thead><tr><th></th>";
+            for (let i = 0; i < headers.length; i++) {
+                str += "<th id='" + headers[i] + "' onclick=\"processColumnClick('" + headers[i] + "');\">" + headers[i] + "</th>";
             }
             str += "<th id='add-column' onclick='addColumn()'>+</th>";
-            str += "</tr>";
-            tableHeader.innerHTML = str;
+            str += "</tr></thead>";
+            let tableHeader = str;
 
             //fill in body data from object
-            str = "";
-            let bodyData = myTable.data; //an array of arrays
+            str = "<tbody>";
+            let bodyData = table.data; //an array of objects;
+            console.log(bodyData);
             let rowCount = bodyData.length;
             for (let i = 0; i < rowCount; i++) {
-                str += "<tr><td id='row-" + (i + 1).toString() + "'>" + (i + 1).toString() + "</td>";
-                let columnCount = bodyData[i].length;
+                str += "<tr><td id='row-" + i.toString() + "' onclick='processRowClick("+i.toString()+")'>" + i.toString() + "</td>";
+                let columnCount = headers.length;
+                console.log(columnCount);
                 for (let j = 0; j < columnCount; j++) {
-                    // str += "<td><input type='text' id='cell-" + (i + 1).toString() + "-" + (j + 1).toString() + "' value='" + bodyData[i][j].toString() + "' onchange='updateTableObject(this.id);'></td>";
-                    // str += `<td id='cell-${i}-${j}'><input type='text' value='${bodyData[i][j]}'></td>`;
-                    str += "<td><input type='text' id='cell-" + (i + 1).toString() + "-" + (j + 1).toString() + "' value='" + bodyData[i][j].toString() + "'></td>";
+					//console.log(headers[j]);
+                    str += "<td><input type='text' id='cell-" + i.toString() + "-" + j.toString() + "' value='" + bodyData[i][headers[j]].toString() + "'></td>";
+                    //str += "<td><input type='text' id='cell-" + (i + 1).toString() + "-" + (j + 1).toString() + "' value='" + i.toString()+j.toString() + "'></td>";
                 }
                 str += "</tr>";
             }
-            tableBody.innerHTML = str;
+            str+="</tbody>"
+            let tableBody = str;
 
             //make footer for additional controls
-            str = "<tr><th id='add-row' onclick='addRow()'>+</th>";
-            for (let i = 0; i < headerFields.length; i++) {
+            str = "<tfoot><tr><th id='add-row' onclick='addRow()'>+</th>";
+            for (let i = 0; i < headers.length; i++) {
                 str += "<th id='footer-" + (i + 1).toString() + "'></th>";
             }
-            str += "</tr>";
-            tableFooter.innerHTML = str;
+            str += "</tr></tfoot>";
+            let tableFooter = str;
+            let strTable = tableHeader + tableBody + tableFooter;
 
-            addListenersToTable();
-            populateMoveColumnSelect(myTable);
-            populateMoveRowSelect(myTable);
+            //addListenersToTable();
+            populateMoveColumnSelect(table);
+            populateMoveRowSelect(table);
+            
+            tableElement.innerHTML=strTable;
+            
+            return strTable;
         }
 
 
-        function addListenersToTable() {
-            let tableHeaders = document.getElementsByTagName('th');
-            let tableData = document.getElementsByTagName('td');
-
-            for (th of tableHeaders) {
-                th.addEventListener('click', (evt) => {
-                    processTableClick(evt)
-                });
-            }
-            for (td of tableData) {
-                td.addEventListener('click', (evt) => {
-                    processTableClick(evt)
-                });
-            }
-        }
-
-
-
-        function populateMoveColumnSelect(myTable) {
+        function populateMoveColumnSelect(table) {
             let moveColumnSelect = document.getElementById('move-column');
             moveColumnSelect.options.length = 0;
             // moveColumnSelect.style.backgroundColor = "orange";
-            let currentTableHeaders = myTable.headerNames; //an array of header names
-            let tempIndex = 1;
+            let currentTableHeaders = table.headers; //an array of header names
             for (th of currentTableHeaders) {
                 let option = document.createElement('option');
-                option.value = tempIndex.toString() + "-" + th;
-                option.text = tempIndex.toString() + "-" + th;;
+                option.value = th;
+                option.text = th;;
                 moveColumnSelect.add(option);
-                tempIndex = tempIndex + 1;
             }
         }
 
-        function populateMoveRowSelect(myTable) {
+        function populateMoveRowSelect(table) {
             // document.getElementById(selectbox).options.length = 0;
             let moveRowSelect = document.getElementById('move-row');
             moveRowSelect.options.length = 0;
             // moveRowSelect.style.backgroundColor = 'orange';
-            for (let i = 0; i < myTable.data.length; i++) {
+            for (let i = 0; i < table.data.length; i++) {
                 let option = document.createElement('option');
-                option.value = (i + 1).toString();
-                option.text = (i + 1).toString();
+                option.value = i.toString();
+                option.text = i.toString();
                 moveRowSelect.add(option);
             }
         }
 
-
-        function processTableClick(evt) {
-            let ids = (evt.target.id).split("-");
-            //parse ids
-            if ((ids[0] === "header") || (ids[0] === "footer")) { //process header cell clicked
-                //get column number
-                let columnNumber = ids[1];
-                console.log("need to process header number" + columnNumber);
-                usefulInteger = parseInt(columnNumber);
-                document.getElementById('column-display-heading').innerHTML = "Column " + columnNumber + ": \"" + myTable.headerNames[usefulInteger - 1] + "\"";
-                document.getElementById('edit-field-name-input').value = myTable.headerNames[usefulInteger - 1];
-
-                showMain("main-header-form")
-            } else if (ids[0] === "row") { //process row clicked
-                //get row number
-                let rowNumber = ids[1];
-                console.log("need to process row number " + rowNumber);
-                usefulInteger = parseInt(rowNumber);
-                document.getElementById('row-display-heading').innerHTML = "Row: " + rowNumber;
-                showMain("main-row-form");
-            } else if (ids[0] === "cell") { //process data cell clicked
-                //get row number
-                let rowNumber = ids[1];
-                //get column number
-                let columnNumber = ids[2];
-                console.log("need to process cell number with row: " + rowNumber + " and column number: " + columnNumber);
-            } else if ((ids[0] === "add") && (ids[1] === "column")) { //process add column clicked
-                console.log("need to process add column");
-                //make name, if name exists, add _1 to it
-            } else if ((ids[0] === "add") && (ids[1] === "row")) { //process add row clicked
-                console.log("need to process add row");
-                //addRow();  ---> had to put in html onlick="addRow()" because was firing twice
-                //make new row with empty fields;
-            }
-        }
-
-
         function updateDataFromCurrentInputs() {
+			let headers=table["headers"];
             //need to look and see what is currently in the table visibly
             //and rewrite the data to the data table
-            for (let i = 0; i < myTable.data.length; i++) {
-                for (let j = 0; j < myTable.headerNames.length; j++) {
-                    let id = "cell-" + (i + 1).toString() + "-" + (j + 1).toString();
+            for (let i = 0; i < table.data.length; i++) {
+                for (let j = 0; j < table.headers.length; j++) {
+                    let id = "cell-" + i.toString() + "-" + j.toString();
                     let thisCell = document.getElementById(id);
-                    myTable.data[i][j] = thisCell.value;
+                    table.data[i][headers[j]] = thisCell.value;
                 }
             }
             //makeTable();
@@ -155,34 +111,34 @@
         //Header functions
         function updateHeaderName() {
             updateDataFromCurrentInputs();
-            let input = document.getElementById("edit-field-name-input");
-            myTable.headerNames[usefulInteger - 1] = input.value;
-            usefulInteger = -1;
-            input.value = "";
-            makeTable(myTable);
+            //let input = document.getElementById("edit-field-name-input");
+            //table.headerNames[usefulInteger - 1] = input.value;
+            //usefulInteger = -1;
+            //input.value = "";
+            //makeTable(table);
             showMain('main-table');
         }
         let specialIndex = 0;
 
         //row functions
-        function addRow() {
+        function addRow(table) {
             updateDataFromCurrentInputs();
-            let numberOfColumns = myTable.headerNames.length;
-            let tempRow = [];
+            let numberOfColumns = table.headers.length;
+            let tempRow = {};
             for (let i = 0; i < numberOfColumns; i++) {
-                tempRow.push("");
+                tempRow[headers[i]]="";
             }
-            myTable["data"].push(JSON.parse(JSON.stringify(tempRow)));
-            makeTable();
+            table["data"].push(tempRow);
+            makeTable(table);
         }
 
         function deleteRow() {
             updateDataFromCurrentInputs();
-            let rowIndex = usefulInteger - 1;
-            let data = myTable.data;
-            myTable.data.splice(rowIndex, 1);
-            usefulInteger = -1;
-            makeTable(myTable);
+            //let rowIndex = usefulInteger - 1;
+            //let data = table.data;
+            //table.data.splice(rowIndex, 1);
+            //usefulInteger = -1;
+            makeTable(table);
             showMain('main-table');
         }
 
@@ -190,8 +146,8 @@
             updateDataFromCurrentInputs();
             let rowIndex = usefulInteger - 1;
             usefulInteger = -1;
-            let rowToCopy = JSON.parse(JSON.stringify(myTable.data[rowIndex]));
-            myTable.data.push(rowToCopy);
+            let rowToCopy = JSON.parse(JSON.stringify(table.data[rowIndex]));
+            table.data.push(rowToCopy);
             makeTable();
             showMain('main-table');
         }
@@ -201,9 +157,9 @@
             let rowIndex = usefulInteger - 1;
             usefulInteger = -1;
             let destinationIndex = parseInt(document.getElementById("move-row").value) - 1;
-            let rowToMove = myTable.data.splice(rowIndex, 1)[0];
-            myTable.data.splice(destinationIndex, 0, rowToMove);
-            console.log(myTable.data);
+            let rowToMove = table.data.splice(rowIndex, 1)[0];
+            table.data.splice(destinationIndex, 0, rowToMove);
+            console.log(table.data);
             makeTable();
             showMain('main-table');
         }
@@ -215,9 +171,9 @@
             let columnNumber = usefulInteger - 1;
             usefulInteger = -1;
             //use that number to remove header value
-            myTable.headerNames.splice(columnNumber, 1);
+            table.headerNames.splice(columnNumber, 1);
             //loop through data table rows
-            for (let row of myTable.data) {
+            for (let row of table.data) {
                 row.splice(columnNumber, 1);
             }
             makeTable();
@@ -225,20 +181,21 @@
         }
 
         function addColumn() {
-            updateDataFromCurrentInputs();
-            myTable.headerNames.push("new");
-            for (let row of myTable.data) {
-                row.push("");
-            }
-            makeTable();
+			alert("need to process add column");
+            //updateDataFromCurrentInputs();
+            //table.headerNames.push("new");
+            //for (let row of table.data) {
+            //    row.push("");
+            //}
+            //makeTable();
         }
 
         function copyColumn() {
             updateDataFromCurrentInputs();
             let currentColumn = usefulInteger - 1;
             usefulInteger = -1;
-            myTable.headerNames.push(myTable.headerNames[currentColumn]);
-            for (let row of myTable.data) {
+            table.headerNames.push(table.headerNames[currentColumn]);
+            for (let row of table.data) {
                 row.push(row[currentColumn]);
             }
             makeTable();
@@ -254,11 +211,11 @@
             let destinationIndex = parseInt(document.getElementById("move-column").value.split("-")[0]) - 1;
 
             //move header
-            let headerToMove = myTable.headerNames.splice(currentColumn, 1);
-            myTable.headerNames.splice(destinationIndex, 0, headerToMove);
+            let headerToMove = table.headerNames.splice(currentColumn, 1);
+            table.headerNames.splice(destinationIndex, 0, headerToMove);
 
             //loop through rows of data and move column in each row
-            for (let row of myTable.data) {
+            for (let row of table.data) {
                 let cellDataToMove = row.splice(currentColumn, 1);
                 row.splice(destinationIndex, 0, cellDataToMove);
             }
@@ -271,7 +228,7 @@
             let columnNumber = usefulInteger - 1;
             usefulInteger = -1;
             let total = 0;
-            for (let row of myTable.data) {
+            for (let row of table.data) {
                 total = total + Number(row[columnNumber]);
             }
             if (confirm("The total is: " + total.toString() + "\nCopy to clipboard?")) {
@@ -285,10 +242,10 @@
             let columnNumber = usefulInteger - 1;
             usefulInteger = -1;
             let total = 0;
-            for (let row of myTable.data) {
+            for (let row of table.data) {
                 total = total + Number(row[columnNumber]);
             }
-            let average = total / myTable.data.length;
+            let average = total / table.data.length;
 
             if (confirm("The average is: " + average.toString() + "\nCopy to clipboard?")) {
                 copyToClipBoard(average.toString());
@@ -298,12 +255,13 @@
 
 
         function newTable() {
-            console.log("newTable() called");
-            if (confirm("Are you sure?  This will erase all current data.")) {
-                myTable = JSON.parse(JSON.stringify(initialTable));
-                makeTable();
-                return myTable;
-            }
+			alert("need to process new");
+            //console.log("newTable() called");
+            //if (confirm("Are you sure?  This will erase all current data.")) {
+            //    table = JSON.parse(JSON.stringify(initialTable));
+            //    makeTable();
+            //    return table;
+            //}
         }
 
         function load() {
@@ -318,11 +276,14 @@
                 fileReader.onload = function(fileLoadedEvent) {
                     fileContents = fileLoadedEvent.target.result;
                     if (confirm("Use the first line as the header row?")) {
-                        myTable = readCSV(fileContents, true);
+						//need to process
+						alert("need to get csv data and make headers and data");
+                        //table = readCSV(fileContents, true);
                     } else {
-                        myTable = readCSV(fileContents, false);
+						alert("need to get csv data and write own headers col1,col2, etc");
+                        //table = readCSV(fileContents, false);
                     }
-                    makeTable();
+                    makeTable(table);
                 };
                 fileReader.readAsText(inputFile, "UTF-8");
             });
@@ -333,9 +294,9 @@
             console.log("save() called");
             updateDataFromCurrentInputs();
             if (confirm("Include header as first line in csv file?")) {
-                saveStringToTextFile(makeCSV(myTable, true), "csvTable" + getTodaysDate(), ".csv");
+                saveStringToTextFile(makeCSV(table, true), "csvTable" + getTodaysDate(), ".csv");
             } else {
-                saveStringToTextFile(makeCSV(myTable, false), "csvTable" + getTodaysDate(), ".csv");
+                saveStringToTextFile(makeCSV(table, false), "csvTable" + getTodaysDate(), ".csv");
             }
         }
 
@@ -425,30 +386,31 @@
             let mains = document.getElementsByTagName('main');
             for (let main of mains) {
                 console.log(main.id);
-                main.style.display = "none";
+                //main.style.display = "none";
             }
-            document.getElementById(id).style.display = "flex";
+            document.getElementById(id).style.display = "inherit";
         }
 
-        function makeCSV(thisTable, header = true) {
+        function makeCSV(thisTable, saveWithHeader = true) {
+			let headers=thisTable["headers"];
             let csvString = "";
             let tempString = "";
-            if (header === true) {
+            if (saveWithHeader === true) {
                 //fill in header from object
-                let headerFields = thisTable.headerNames;
-                for (let headerField of headerFields) {
-                    tempString = headerField.toString().replaceAll('"', '""'); //any interior " needs to be replaced with ""
+                let headers = thisTable["headers"];
+                for (let header of headers) {
+                    tempString = header.toString().replaceAll('"', '""'); //any interior " needs to be replaced with ""
                     csvString += "\"" + tempString + "\","; //surround each field with quotes
                 }
                 csvString = csvString.slice(0, -1) + "\n"; //remove last comma and add new line
             }
             //fill in body data
-            let bodyData = thisTable.data;
-            let rowCount = bodyData.length;
-            for (let i = 0; i < rowCount; i++) {
-                let columnCount = bodyData[i].length;
-                for (let j = 0; j < columnCount; j++) {
-                    tempString = bodyData[i][j].toString().replaceAll('"', '""'); //any interior " needs to be replaced with ""
+            let bodyData = thisTable["data"];
+            let numberOfRows = bodyData.length;
+            let numberOfColumns = headers.length;
+            for (let i = 0; i < numberOfRows; i++) {
+                for (let j = 0; j < numberOfColumns; j++) {
+                    tempString = bodyData[i][headers[j]].toString().replaceAll('"', '""'); //any interior " needs to be replaced with ""
                     csvString += "\"" + tempString + "\","; //surround each field with quotes
                 }
                 csvString = csvString.slice(0, -1) + "\n"; //remove last comma and add new line
@@ -457,6 +419,8 @@
             return (csvString);
         }
 
+
+		//needs rewritten to match above format
         function readCSV(csvString, header = true) {
             //trim string
             csvString = csvString.trim();
@@ -548,20 +512,20 @@
             updateDataFromCurrentInputs();
             let thisResult = "";
             if (confirm("Include header as first line?")) {
-                thisResult = copyToClipBoard(makeCSV(myTable, true));
+                thisResult = copyToClipBoard(makeCSV(table, true));
             } else {
-                thisResult = copyToClipBoard(makeCSV(myTable, false));
+                thisResult = copyToClipBoard(makeCSV(table, false));
             }
             return thisResult;
         }
 
-        makeTable(myTable);
-        showMain('main-table');
+        makeTable(table);
+        //showMain('main-table');
 
 
 
         // console.log("HERE TEST\n----------------------------");
-        // myTable = {
+        // table = {
         //     headerNames: ["Field1", "\",\"Field2 is \"super cool\" and I like using \",\" because \",\"  is really cool   so you should really try \",\""],
         //     data: [
         //         [0, 2],
@@ -569,14 +533,14 @@
         //     ]
         // }
 
-        // let aCSVTable = makeCSV(myTable, true);
+        // let aCSVTable = makeCSV(table, true);
         // console.log(aCSVTable);
 
         // console.log("SECOND TEST\n----------------");
-        // console.log(myTable);
+        // console.log(table);
 
         // let anotherNewTable = readCSV(aCSVTable, false);
         // console.log(anotherNewTable);
 
-        // myTable = anotherNewTable;
+        // table = anotherNewTable;
         // makeTable();
