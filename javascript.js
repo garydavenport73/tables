@@ -1,23 +1,47 @@
         let initialTable = {
             headers: ["Column 1", "Column 2", "Column 3"],
             data: [
-                {"Column 1":"", "Column 2":"","Column 3":""},
-                {"Column 1":"", "Column 2":"","Column 3":""},
-                {"Column 1":"", "Column 2":"","Column 3":""}
+                {"Column 1":"hi", "Column 2":"","Column 3":""},
+                {"Column 1":"there", "Column 2":"","Column 3":""},
+                {"Column 1":"everybody", "Column 2":"","Column 3":""}
             ]
         }
 
         let table = JSON.parse(JSON.stringify(initialTable));
+        
+		function fillInEmptyPropertyValues(table){
+			let data=table["data"];
+			let headers=table["headers"];
+			for (let i=0; i<data.length; i++){ //fill in empty property values;
+				for (let j=0;j<headers.length;j++){
+					if (data[i][headers[j]]===undefined){
+						data[i][headers[j]]="";
+						}
+					}
+				}
+			}
 
 		function processColumnClick(header){
-			alert("need to process header "+header);
+			//alert("need to process header "+header);
+
+			//update the database	
+			updateDataFromCurrentInputs();
+			populateMoveColumnSelect(table);
+			
+			//fill out the form on the columns page
+			
+			document.getElementById("current-header").innerHTML=header;
 			}
 			
-		function processFooterClick(header){
-			alert("need to process footer key is " + header);
-			}
+
 		function processRowClick(row){
-			alert("need to process row "+row.toString());
+			//alert("need to process row "+row.toString());
+			
+			//update the database	
+			updateDataFromCurrentInputs();
+			populateMoveRowSelect(table);
+			
+			document.getElementById("current-row").innerHTML=row.toString();
 			}
 
         function makeTable(table) {
@@ -31,7 +55,7 @@
             for (let i = 0; i < headers.length; i++) {
                 str += "<th id='" + headers[i] + "' onclick=\"processColumnClick('" + headers[i] + "');\">" + headers[i] + "</th>";
             }
-            str += "<th id='add-column' onclick='addColumn()'>+</th>";
+            str += "<th id='add-column' onclick='addColumn(table)'>+</th>";
             str += "</tr></thead>";
             let tableHeader = str;
 
@@ -57,7 +81,7 @@
             //make footer for additional controls
             str = "<tfoot><tr><th id='add-row' onclick='addRow(table)'>+</th>";
             for (let i = 0; i < headers.length; i++) {
-                str += "<th id='footer-" + (i + 1).toString() + "' onclick=\"processFooterClick('" + headers[i] + "');\"></th>";
+                str += "<th id='footer-" + (i + 1).toString() + "' onclick=\"processColumnClick('" + headers[i] + "');\"></th>";
             }
             str += "</tr></tfoot>";
             let tableFooter = str;
@@ -91,7 +115,7 @@
             let moveRowSelect = document.getElementById('move-row');
             moveRowSelect.options.length = 0;
             // moveRowSelect.style.backgroundColor = 'orange';
-            for (let i = 0; i < table.data.length; i++) {
+            for (let i = 0; i < table["data"].length; i++) {
                 let option = document.createElement('option');
                 option.value = i.toString();
                 option.text = i.toString();
@@ -138,38 +162,41 @@
         }
 
         function deleteRow() {
-            updateDataFromCurrentInputs();
+            //updateDataFromCurrentInputs();
+            let index=parseInt(document.getElementById("current-row").innerHTML);
             //let rowIndex = usefulInteger - 1;
-            //let data = table.data;
-            //table.data.splice(rowIndex, 1);
+            let data = table["data"];
+            data.splice(index, 1);
             //usefulInteger = -1;
             makeTable(table);
-            showMain('main-table');
+            //showMain('main-table');
         }
 
         function copyRow() {
-			alert("copy row called");
+			//alert("copy row called");
 			console.log("copy row called");
             //updateDataFromCurrentInputs();
-            //let rowIndex = usefulInteger - 1;
-            //usefulInteger = -1;
-            //let rowToCopy = JSON.parse(JSON.stringify(table.data[rowIndex]));
-            //table.data.push(rowToCopy);
-            //makeTable();
+            let index=parseInt(document.getElementById("current-row").innerHTML);
+            let data = table["data"];
+            console.log(data);
+
+            let rowToCopy = JSON.parse(JSON.stringify(table.data[index]));
+            
+            data.push(rowToCopy);
+            makeTable(table);
             //showMain('main-table');
         }
 
         function moveRow() {
-			alert("move row called");
+			//alert("move row called");
 			console.log("move row called");
-            //updateDataFromCurrentInputs();
-            //let rowIndex = usefulInteger - 1;
-            //usefulInteger = -1;
-            //let destinationIndex = parseInt(document.getElementById("move-row").value) - 1;
-            //let rowToMove = table.data.splice(rowIndex, 1)[0];
-            //table.data.splice(destinationIndex, 0, rowToMove);
+            let index=parseInt(document.getElementById("current-row").innerHTML);
+            let data = table["data"];
+            let destinationIndex = parseInt(document.getElementById("move-row").value);
+            let rowToMove = data.splice(index, 1)[0];
+            data.splice(destinationIndex, 0, rowToMove);
             //console.log(table.data);
-            //makeTable();
+            makeTable(table);
             //showMain('main-table');
         }
 
@@ -198,9 +225,25 @@
             //showMain('main-table');
         }
 
-        function addColumn() {
-			alert("need to process add column");
-            //updateDataFromCurrentInputs();
+        function addColumn(table) {
+			//alert("need to process add column");
+            updateDataFromCurrentInputs();
+            let newIndex=1;
+            let newColumnName="new"+newIndex.toString(); //make a new name
+            
+            //if name already in use, make a new name
+			while (table["headers"].includes(newColumnName)){
+				console.log("column name already in use");
+				newIndex+=1;
+				newColumnName="new"+newIndex.toString();
+				}
+			//alert("new column name "+newColumnName);
+			
+			table.headers.push(newColumnName);
+			
+			
+			fillInEmptyPropertyValues(table);
+			makeTable(table);
             //table.headerNames.push("new");
             //for (let row of table.data) {
             //    row.push("");
@@ -281,13 +324,14 @@
 
 
         function newTable() {
-			alert("need to process new");
+			//alert("need to process new");
             //console.log("newTable() called");
-            //if (confirm("Are you sure?  This will erase all current data.")) {
-            //    table = JSON.parse(JSON.stringify(initialTable));
-            //    makeTable();
-            //    return table;
-            //}
+            if (confirm("Are you sure?  This will erase all current data.")) {
+                table = JSON.parse(JSON.stringify(initialTable));
+                makeTable(table);
+				showMain('main-table');
+                return table;
+            }
         }
 
         function load() {

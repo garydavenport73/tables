@@ -1,7 +1,11 @@
-notes       done
-tables      done
-mileage     done
-calculator  do
-timesheet   do
-contacts    do
-calendar    do
+load table
+
+columns
+	delete column
+	copy column
+	move to column
+	add total
+	compute average
+	cancel
+	
+	change name to
