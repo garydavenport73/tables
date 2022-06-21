@@ -21,22 +21,19 @@
 				}
 			}
 
-		function processColumnClick(header){
-			//alert("need to process header "+header);
 
+
+		function processColumnClick(header){
 			//update the database	
 			updateDataFromCurrentInputs();
 			populateMoveColumnSelect(table);
-			
 			//fill out the form on the columns page
-			
 			document.getElementById("current-header").innerHTML=header;
 			}
 			
 
 		function processRowClick(row){
 			//alert("need to process row "+row.toString());
-			
 			//update the database	
 			updateDataFromCurrentInputs();
 			populateMoveRowSelect(table);
@@ -105,7 +102,7 @@
             for (th of currentTableHeaders) {
                 let option = document.createElement('option');
                 option.value = th;
-                option.text = th;;
+                option.text = th;
                 moveColumnSelect.add(option);
             }
         }
@@ -136,12 +133,15 @@
             }
             //makeTable();
         }
-        //Header functions
+        //Column functions
         function updateHeaderName(table) {
-            updateDataFromCurrentInputs();
+            //updateDataFromCurrentInputs();
+            //get old name
             let fieldName = document.getElementById("current-header").innerHTML;
+            //get new name
             let newName = document.getElementById('new-header-name').value;	
             
+            //do nothing if they are the same
             if (fieldName===newName){
 				makeTable(table);
 				return;
@@ -149,43 +149,183 @@
             
             let headers = table["headers"];
             let data = table["data"];
-			let index = headers.indexOf(fieldName);//get index of field 	
+            
             if (newName ===""){ //if blank make name new
 				newName = prompt("There is no name listed, please enter the new name");
 				if (newName === null) {
 					return;
 				}
 			}
-				
+
+			table = _changeHeaderAndDataPropertyName(table, newName, fieldName);
+                        
+            makeTable(table);
+            showMain('main-table');
+        }
+        
+        function _changeHeaderAndDataPropertyName(table, newName, oldName){
 			let nameCount=0;
 			let columnName=newName;
+			let data = table["data"];
             //if name already in use, make a new name
 			while (table["headers"].includes(columnName)){
 				console.log("column name already in use");
 				nameCount+=1;
 				columnName = newName +"-"+ nameCount.toString();
+			}
+			
+			let index = table["headers"].indexOf(oldName);//get index of field 
+
+            table["headers"][index]=columnName;			//change header name
+            //update rows
+            for (let i = 0; i < data.length; i++){ 
+				data[i][columnName]=data[i][oldName];//set new property to old
+				delete data[i][oldName]; //delete old
+			}		
+			return table;
+		}
+		// column functions
+        //DONE	updateHeaderName();">Change name to:</button><input type="text" placeholder="name"></span>
+        //DONE deleteColumn();">Delete Column</button>
+        //copyColumn()">Copy Column</button>
+        //moveColumn()">Move To Column</button><select id="move-column"></select></span>
+        //Add Total</button>
+        //Compute Average</button>
+        //Cancel</button>
+
+        function deleteColumn(table) {
+			//alert("delete column called");
+			console.log("delete column called");
+			let columnName = document.getElementById("current-header").innerHTML;
+			let index = table["headers"].indexOf(columnName);
+			
+			table["headers"].splice(index,1); 			//delete from header array
+			
+			//loop through rows
+			
+			for (let i = 0; i < table["data"].length; i++){
+				
+				delete table["data"][i][columnName];
+				
+				}
+			
+			makeTable(table);
+			showMain('main-table');
+			
+
+			
+			
+			//delete from rows
+			
+			
+			
+			
+			
+            //updateDataFromCurrentInputs();
+            //let columnNumber = usefulInteger - 1;
+            //usefulInteger = -1;
+            //use that number to remove header value
+            //table.headerNames.splice(columnNumber, 1);
+            //loop through data table rows
+            //for (let row of table.data) {
+                //row.splice(columnNumber, 1);
+            //}
+            //makeTable();
+            //showMain('main-table');
+        }
+
+        function addColumn(table) {
+			//alert("need to process add column");
+            updateDataFromCurrentInputs();
+            let newIndex=1;
+            let newColumnName="new"+newIndex.toString(); //make a new name
+            
+            //if name already in use, make a new name
+			while (table["headers"].includes(newColumnName)){
+				console.log("column name already in use");
+				newIndex+=1;
+				newColumnName="new"+newIndex.toString();
 				}
 			//alert("new column name "+newColumnName);
 			
-            headers[index]=columnName;
-            
-            console.log(headers);
-            
-            //update rows
-            for (let i = 0; i < data.length; i++){ 
-				data[i][columnName]=data[i][fieldName];//set new property to old
-				delete data[i][fieldName]; //delete old
+			table.headers.push(newColumnName);
+			
+			
+			fillInEmptyPropertyValues(table);
+			makeTable(table);
+            //table.headerNames.push("new");
+            //for (let row of table.data) {
+            //    row.push("");
+            //}
+            //makeTable();
+        }
+
+        function moveColumn(table) {
+			let columnName = document.getElementById("current-header").innerHTML;
+			let destinationColumnName=document.getElementById("move-column").value;
+			if (columnName===destinationColumnName){
+				console.log("destination is same as source");
+				return;
 				}
-            
+			let index = table["headers"].indexOf(columnName);
+			let headerToMove = table["headers"].splice(index, 1)[0]; //splice returns an array length 1
+			let destinationIndex=table["headers"].indexOf(destinationColumnName);
+            table["headers"].splice(destinationIndex, 0, headerToMove);
             makeTable(table);
-            //let input = document.getElementById("edit-field-name-input");
-            //table.headerNames[usefulInteger - 1] = input.value;
-            //usefulInteger = -1;
-            //input.value = "";
-            //makeTable(table);
             showMain('main-table');
         }
 
+
+        function copyColumn() {
+			alert("delete column called");
+			console.log("delete column called")
+            //updateDataFromCurrentInputs();
+            //let currentColumn = usefulInteger - 1;
+            //usefulInteger = -1;
+            //table.headerNames.push(table.headerNames[currentColumn]);
+            //for (let row of table.data) {
+                //row.push(row[currentColumn]);
+            //}
+            //makeTable();
+            //showMain('main-table');
+        }
+
+
+
+        function calculateTotal() {
+			alert("calculate total called");
+			console.log("calculate total called")
+            //updateDataFromCurrentInputs();
+            //let columnNumber = usefulInteger - 1;
+            //usefulInteger = -1;
+            //let total = 0;
+            //for (let row of table.data) {
+                //total = total + Number(row[columnNumber]);
+            //}
+            //if (confirm("The total is: " + total.toString() + "\nCopy to clipboard?")) {
+                //copyToClipBoard(total.toString());
+            //};
+            //showMain('main-table');
+        }
+
+        function calculateAverage() {
+			alert("calculate average called");
+			console.log("calcualtoe average called")
+            //updateDataFromCurrentInputs();
+            //let columnNumber = usefulInteger - 1;
+            //usefulInteger = -1;
+            //let total = 0;
+            //for (let row of table.data) {
+                //total = total + Number(row[columnNumber]);
+            //}
+            //let average = total / table.data.length;
+
+            //if (confirm("The average is: " + average.toString() + "\nCopy to clipboard?")) {
+                //copyToClipBoard(average.toString());
+            //}
+            //showMain('main-table');
+        }
+		
         //row functions
         function addRow(table) {
 			let headers = table["headers"];
@@ -238,127 +378,7 @@
             //showMain('main-table');
         }
 
-        // column functions
-        //<span><button onclick="updateHeaderName();">Change name to:</button><input type="text" placeholder="name"></span>
-        //<button onclick="deleteColumn();">Delete Column</button>
-        //<button onclick="copyColumn()">Copy Column</button>
-        //<span><button onclick="moveColumn()">Move To Column</button><select id="move-column"></select></span>
-        //<button onclick="calculateTotal()">Add Total</button>
-        //<button onclick="calculateAverage()">Compute Average</button>
-        //<button onclick="showMain('main-table')">Cancel</button>
 
-        function deleteColumn() {
-			alert("delete column called");
-			console.log("delete column called");
-            //updateDataFromCurrentInputs();
-            //let columnNumber = usefulInteger - 1;
-            //usefulInteger = -1;
-            //use that number to remove header value
-            //table.headerNames.splice(columnNumber, 1);
-            //loop through data table rows
-            //for (let row of table.data) {
-                //row.splice(columnNumber, 1);
-            //}
-            //makeTable();
-            //showMain('main-table');
-        }
-
-        function addColumn(table) {
-			//alert("need to process add column");
-            updateDataFromCurrentInputs();
-            let newIndex=1;
-            let newColumnName="new"+newIndex.toString(); //make a new name
-            
-            //if name already in use, make a new name
-			while (table["headers"].includes(newColumnName)){
-				console.log("column name already in use");
-				newIndex+=1;
-				newColumnName="new"+newIndex.toString();
-				}
-			//alert("new column name "+newColumnName);
-			
-			table.headers.push(newColumnName);
-			
-			
-			fillInEmptyPropertyValues(table);
-			makeTable(table);
-            //table.headerNames.push("new");
-            //for (let row of table.data) {
-            //    row.push("");
-            //}
-            //makeTable();
-        }
-
-        function copyColumn() {
-			alert("delete column called");
-			console.log("delete column called")
-            //updateDataFromCurrentInputs();
-            //let currentColumn = usefulInteger - 1;
-            //usefulInteger = -1;
-            //table.headerNames.push(table.headerNames[currentColumn]);
-            //for (let row of table.data) {
-                //row.push(row[currentColumn]);
-            //}
-            //makeTable();
-            //showMain('main-table');
-        }
-
-        function moveColumn() {
-			alert("delete movecolumn called");
-			console.log("move column called")
-            //updateDataFromCurrentInputs();
-            //let currentColumn = usefulInteger - 1;
-            //usefulInteger = -1;
-
-            ////get select option, split by "-" then take first token turn it into integer and subtact 1
-            //let destinationIndex = parseInt(document.getElementById("move-column").value.split("-")[0]) - 1;
-
-            ////move header
-            //let headerToMove = table.headerNames.splice(currentColumn, 1);
-            //table.headerNames.splice(destinationIndex, 0, headerToMove);
-
-            ////loop through rows of data and move column in each row
-            //for (let row of table.data) {
-                //let cellDataToMove = row.splice(currentColumn, 1);
-                //row.splice(destinationIndex, 0, cellDataToMove);
-            //}
-            //makeTable();
-            //showMain('main-table');
-        }
-
-        function calculateTotal() {
-			alert("calculate total called");
-			console.log("calculate total called")
-            //updateDataFromCurrentInputs();
-            //let columnNumber = usefulInteger - 1;
-            //usefulInteger = -1;
-            //let total = 0;
-            //for (let row of table.data) {
-                //total = total + Number(row[columnNumber]);
-            //}
-            //if (confirm("The total is: " + total.toString() + "\nCopy to clipboard?")) {
-                //copyToClipBoard(total.toString());
-            //};
-            //showMain('main-table');
-        }
-
-        function calculateAverage() {
-			alert("calculate average called");
-			console.log("calcualtoe average called")
-            //updateDataFromCurrentInputs();
-            //let columnNumber = usefulInteger - 1;
-            //usefulInteger = -1;
-            //let total = 0;
-            //for (let row of table.data) {
-                //total = total + Number(row[columnNumber]);
-            //}
-            //let average = total / table.data.length;
-
-            //if (confirm("The average is: " + average.toString() + "\nCopy to clipboard?")) {
-                //copyToClipBoard(average.toString());
-            //}
-            //showMain('main-table');
-        }
 
 
         function newTable() {
