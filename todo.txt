@@ -8,4 +8,4 @@ columns
 	compute average
 	cancel
 	
-	change name to
+	x change name to
