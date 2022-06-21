@@ -268,26 +268,49 @@
 				return;
 				}
 			let index = table["headers"].indexOf(columnName);
-			let headerToMove = table["headers"].splice(index, 1)[0]; //splice returns an array length 1
+			
+			
 			let destinationIndex=table["headers"].indexOf(destinationColumnName);
+			
+			let headerToMove = table["headers"].splice(index, 1)[0]; //splice returns an array length 1
+
             table["headers"].splice(destinationIndex, 0, headerToMove);
             makeTable(table);
             showMain('main-table');
         }
 
+		function getBestName(table, name){
+			
+			let headers = table["headers"];
+			let nameCount = 0;
+			let bestName =  name;
+			
+			while (headers.includes(bestName)){
+				console.log("column name already in use");
+				nameCount+=1;
+				bestName = name +"-"+ nameCount.toString();
+				}
+			
+			return bestName;
+			}
 
-        function copyColumn() {
-			alert("delete column called");
-			console.log("delete column called")
-            //updateDataFromCurrentInputs();
-            //let currentColumn = usefulInteger - 1;
-            //usefulInteger = -1;
-            //table.headerNames.push(table.headerNames[currentColumn]);
-            //for (let row of table.data) {
-                //row.push(row[currentColumn]);
-            //}
-            //makeTable();
-            //showMain('main-table');
+        function copyColumn(table) {
+			//get column 
+			let columnName = document.getElementById("current-header").innerHTML;
+
+			//make name for new column
+			let newName=getBestName(table,columnName);
+			//add to headers			
+			table["headers"].push(newName);
+
+			//go through rows of data
+			for (let i=0;i<table["data"].length;i++){
+				table["data"][i][newName]=table["data"][i][columnName];
+				}
+			
+			makeTable(table);
+			showMain('main-table');
+			
         }
 
 
@@ -368,10 +391,24 @@
         function moveRow() {
 			//alert("move row called");
 			console.log("move row called");
+            
+            
+            
             let index=parseInt(document.getElementById("current-row").innerHTML);
+            
+            
             let data = table["data"];
+            
+            
+            
+            
             let destinationIndex = parseInt(document.getElementById("move-row").value);
+            
+            
+            
             let rowToMove = data.splice(index, 1)[0];
+            
+            
             data.splice(destinationIndex, 0, rowToMove);
             //console.log(table.data);
             makeTable(table);
