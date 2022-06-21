@@ -137,8 +137,47 @@
             //makeTable();
         }
         //Header functions
-        function updateHeaderName() {
+        function updateHeaderName(table) {
             updateDataFromCurrentInputs();
+            let fieldName = document.getElementById("current-header").innerHTML;
+            let newName = document.getElementById('new-header-name').value;	
+            
+            if (fieldName===newName){
+				makeTable(table);
+				return;
+				}
+            
+            let headers = table["headers"];
+            let data = table["data"];
+			let index = headers.indexOf(fieldName);//get index of field 	
+            if (newName ===""){ //if blank make name new
+				newName = prompt("There is no name listed, please enter the new name");
+				if (newName === null) {
+					return;
+				}
+			}
+				
+			let nameCount=0;
+			let columnName=newName;
+            //if name already in use, make a new name
+			while (table["headers"].includes(columnName)){
+				console.log("column name already in use");
+				nameCount+=1;
+				columnName = newName +"-"+ nameCount.toString();
+				}
+			//alert("new column name "+newColumnName);
+			
+            headers[index]=columnName;
+            
+            console.log(headers);
+            
+            //update rows
+            for (let i = 0; i < data.length; i++){ 
+				data[i][columnName]=data[i][fieldName];//set new property to old
+				delete data[i][fieldName]; //delete old
+				}
+            
+            makeTable(table);
             //let input = document.getElementById("edit-field-name-input");
             //table.headerNames[usefulInteger - 1] = input.value;
             //usefulInteger = -1;
@@ -146,7 +185,6 @@
             //makeTable(table);
             showMain('main-table');
         }
-        let specialIndex = 0;
 
         //row functions
         function addRow(table) {
@@ -558,7 +596,7 @@
                 } else {
                     if (newCSVArrayOfArrays.length > 0) {
 						for (let j=0;j<newCSVArrayOfArrays[0].length;j++){
-							headers.push("Column-"+(j+1).toString());
+							headers.push("Column "+(j+1).toString());
 							}
                         for (let i = 0; i < newCSVArrayOfArrays.length; i++) { //loop through rows
 							let tempRow = {};
