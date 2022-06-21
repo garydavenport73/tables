@@ -165,33 +165,21 @@
         
         function _changeHeaderAndDataPropertyName(table, newName, oldName){
 			let nameCount=0;
-			let columnName=newName;
 			let data = table["data"];
-            //if name already in use, make a new name
-			while (table["headers"].includes(columnName)){
-				console.log("column name already in use");
-				nameCount+=1;
-				columnName = newName +"-"+ nameCount.toString();
-			}
 			
+			newName=getBestName(table, newName);
+						
 			let index = table["headers"].indexOf(oldName);//get index of field 
 
-            table["headers"][index]=columnName;			//change header name
+            table["headers"][index]=newName;			//change header name
             //update rows
             for (let i = 0; i < data.length; i++){ 
-				data[i][columnName]=data[i][oldName];//set new property to old
+				data[i][newName]=data[i][oldName];//set new property to old
 				delete data[i][oldName]; //delete old
 			}		
 			return table;
 		}
-		// column functions
-        //DONE	updateHeaderName();">Change name to:</button><input type="text" placeholder="name"></span>
-        //DONE deleteColumn();">Delete Column</button>
-        //copyColumn()">Copy Column</button>
-        //moveColumn()">Move To Column</button><select id="move-column"></select></span>
-        //Add Total</button>
-        //Compute Average</button>
-        //Cancel</button>
+
 
         function deleteColumn(table) {
 			//alert("delete column called");
@@ -212,26 +200,6 @@
 			makeTable(table);
 			showMain('main-table');
 			
-
-			
-			
-			//delete from rows
-			
-			
-			
-			
-			
-            //updateDataFromCurrentInputs();
-            //let columnNumber = usefulInteger - 1;
-            //usefulInteger = -1;
-            //use that number to remove header value
-            //table.headerNames.splice(columnNumber, 1);
-            //loop through data table rows
-            //for (let row of table.data) {
-                //row.splice(columnNumber, 1);
-            //}
-            //makeTable();
-            //showMain('main-table');
         }
 
         function addColumn(table) {
@@ -315,25 +283,49 @@
 
 
 
-        function calculateTotal() {
-			alert("calculate total called");
-			console.log("calculate total called")
-            //updateDataFromCurrentInputs();
-            //let columnNumber = usefulInteger - 1;
-            //usefulInteger = -1;
-            //let total = 0;
-            //for (let row of table.data) {
-                //total = total + Number(row[columnNumber]);
-            //}
-            //if (confirm("The total is: " + total.toString() + "\nCopy to clipboard?")) {
-                //copyToClipBoard(total.toString());
-            //};
-            //showMain('main-table');
+        function calculateTotal(table) {
+            //get column 
+			let columnName = document.getElementById("current-header").innerHTML;
+            
+            
+            let total = 0;
+            for (let row of table.data) {
+                total = total + Number(row[columnName]);
+            }
+            if (confirm("The total is: " + total.toString() + "\nCopy to clipboard?")) {
+                copyToClipBoard(total.toString());
+            };
+            showMain('main-table');
         }
+        
+        function cancel(table){
+			console.log("cancel called");
+			makeTable(table);//probably not needed
+			showMain('main-table');
+				
+			}
 
         function calculateAverage() {
 			alert("calculate average called");
-			console.log("calcualtoe average called")
+			console.log("calcualtoe average called");
+			
+			let columnName = document.getElementById("current-header").innerHTML;
+            
+            
+            let total = 0;
+            
+            for (let row of table.data) {
+                total = total + Number(row[columnName]);
+            }
+            
+            let average = total / table.data.length;
+
+            if (confirm("The average is: " + average.toString() + "\nCopy to clipboard?")) {
+                copyToClipBoard(average.toString());
+            }
+            showMain('main-table');
+            
+			
             //updateDataFromCurrentInputs();
             //let columnNumber = usefulInteger - 1;
             //usefulInteger = -1;

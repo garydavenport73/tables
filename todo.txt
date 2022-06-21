@@ -2,16 +2,17 @@ X load table
 
 columns
 	x change name to
-	
-	delete column
-	copy column
-	move to column
-	add total
-	compute average
-	cancel
+	x delete column
+	x copy column
+	x move to column
+	x add total
+	x compute average
+	x cancel
 	
 
 consider making function to return best name
+
+done
 
 bestName(proposedName, table){
 	//do checking

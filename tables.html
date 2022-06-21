@@ -31,9 +31,9 @@
         <button onclick="deleteColumn(table);">Delete Column</button>
         <button onclick="copyColumn(table)">Copy Column</button>
         <span><button onclick="moveColumn(table)">Move To Column</button><select id="move-column"></select></span>
-        <button onclick="calculateTotal()">Add Total</button>
-        <button onclick="calculateAverage()">Compute Average</button>
-        <button onclick="showMain('main-table')">Cancel</button>
+        <button onclick="calculateTotal(table)">Add Total</button>
+        <button onclick="calculateAverage(table)">Compute Average</button>
+        <button onclick="cancel(table)">Cancel</button>
     </main>
     <hr>
     <main id="main-row-form">
@@ -41,7 +41,7 @@
         <button onclick="deleteRow()">Delete Row</button>
         <button onclick="copyRow()">Copy Row</button>
         <span><button onclick="moveRow()">Move To Row</button><select id="move-row"></select></span>
-        <button onclick="showMain('main-table')">Cancel</button>
+        <button onclick="cancel(table)">Cancel</button>
     </main>
     <script src="javascript.js"></script>
 </body>
