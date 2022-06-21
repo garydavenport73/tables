@@ -347,11 +347,11 @@
                     fileContents = fileLoadedEvent.target.result;
                     if (confirm("Use the first line as the header row?")) {
 						//need to process
-						alert("need to get csv data and make headers and data");
-                        //table = readCSV(fileContents, true);
+						//alert("need to get csv data and make headers and data");
+                        table = readCSV(fileContents, true);
                     } else {
-						alert("need to get csv data and write own headers col1,col2, etc");
-                        //table = readCSV(fileContents, false);
+						//alert("need to get csv data and write own headers col1,col2, etc");
+                        table = readCSV(fileContents, false);
                     }
                     makeTable(table);
                 };
@@ -491,7 +491,7 @@
 
 
 		//needs rewritten to match above format
-        function readCSV(csvString, header = true) {
+        function readCSV(csvString, loadWithHeader = true) {
             //trim string
             csvString = csvString.trim();
 
@@ -532,32 +532,51 @@
                 // console.log(tempRowArray);
                 newCSVArrayOfArrays.push(tempRowArray); //add each row to the new array
             }
-
-            let finalTable = {}
-                // finalTable["headerNames"] = [];
-
-
+            
+            console.log(newCSVArrayOfArrays); //now we have a straight array of arrays of strings in a csv style grid
+            
+            //convert to headers and data.
+            
+            
+            
+			let headers=[];
+            let data=[];
+            
             if (newCSVArrayOfArrays.length > 0) {
-                if (header === true) {
+                if (loadWithHeader === true) {
                     //finalTable["headerNames"] = JSON.parse(JSON.stringify(newCSVArrayOfArrays[0]));
-                    finalTable["headerNames"] = newCSVArrayOfArrays[0];
+                    headers = newCSVArrayOfArrays[0];
                     if (newCSVArrayOfArrays.length > 1) {
-                        let tempRow = [];
-                        finalTable["data"] = [];
-                        for (let i = 1; i < newCSVArrayOfArrays.length; i++) {
-                            // finalTable["data"].push(JSON.parse(JSON.stringify(newCSVArrayOfArrays[i])));
-                            finalTable["data"].push(newCSVArrayOfArrays[i]);
-                        }
-                    }
+                        for (let i = 1; i < newCSVArrayOfArrays.length; i++) { //loop through rows
+							let tempRow = {};
+							for (let j=0; j< newCSVArrayOfArrays[i].length; j++){ //loop through cells in rows
+								tempRow[headers[j]]=newCSVArrayOfArrays[i][j];
+								}
+								data.push(tempRow);
+							}
+						}
                 } else {
-                    finalTable["headerNames"] = [];
-                    for (let i = 0; i < newCSVArrayOfArrays[0].length; i++) {
-                        finalTable["headerNames"].push("Column-" + (i + 1).toString());
-                    }
-                    finalTable["data"] = newCSVArrayOfArrays;
-                }
-            }
+                    if (newCSVArrayOfArrays.length > 0) {
+						for (let j=0;j<newCSVArrayOfArrays[0].length;j++){
+							headers.push("Column-"+(j+1).toString());
+							}
+                        for (let i = 0; i < newCSVArrayOfArrays.length; i++) { //loop through rows
+							let tempRow = {};
+							for (let j=0; j< newCSVArrayOfArrays[i].length; j++){ //loop through cells in rows
+								tempRow[headers[j]]=newCSVArrayOfArrays[i][j];
+								}
+								data.push(tempRow);
+							}
+						}
+					}
+				}
 
+			console.log(headers);
+			console.log(data);
+			
+			let finalTable={};
+			finalTable["headers"]=headers;
+			finalTable["data"]=data;
 
             return JSON.parse(JSON.stringify(finalTable));
         }
