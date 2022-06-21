@@ -1,6 +1,8 @@
 X load table
 
 columns
+	x change name to
+	
 	delete column
 	copy column
 	move to column
@@ -8,4 +10,10 @@ columns
 	compute average
 	cancel
 	
-	x change name to
+
+consider making function to return best name
+
+bestName(proposedName, table){
+	//do checking
+	return bestName;
+}
